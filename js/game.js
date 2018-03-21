@@ -185,7 +185,7 @@ if (!shot2) {
     
     //console.log("x",x,"y",y,"xVel",xVel,"yVel",yVel,"oldx",oldx,"oldy",oldy);
     
-    x2 -= xVel2;
+    x2 += xVel2;
     y2 += yVel2;
     yVel2 += g;
 
@@ -203,7 +203,12 @@ if (!shot2) {
       resetArrow2();
     }
     
-    
+       if(checkOverlap(newArrow2, bow)) {
+          //console.log(intersects.width);
+      //    console.log("WTF");
+          resetArrow2();
+        }
+   
   }
 }
 
@@ -233,7 +238,7 @@ function createArrow() {
 function shootArrow() {
              xText.text = 'mouse x: ' + game.input.mousePointer.x+' mouse y: ' + game.input.mousePointer.y;
 
-  if(!shot && game.input.mousePointer.x<40 && game.input.mousePointer.y<290) {
+  if(!shot && game.input.mousePointer.x<40 && game.input.mousePointer.y<290 && game.input.mousePointer.y>230) {
   
     shot = true;
     newArrow = game.add.sprite(bow.x, bow.y, 'arrow');
@@ -282,3 +287,16 @@ var arrowURI = 'assets/arrow.gif';
 addNewPlayer = function(name){
     scoreText.text = name;
 };
+
+movePlayer = function(x, y, angle){
+   xText.text = 'mouse x: ' + x+' mouse y: ' + y;
+
+  bow2.angle=angle;
+    shot2 = true;
+    newArrow2 = game.add.sprite(bow2.x, bow2.y, 'arrow');
+    newArrow2.anchor.setTo(0.5);
+    newArrow2.scale.setTo(0.5);
+    newArrow2.angle = bow2.angle;
+    xVel2 = - (x-bow2.x)/6;
+    yVel2 = - (y-bow2.y)/6;
+}

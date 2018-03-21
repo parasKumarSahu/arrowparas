@@ -132,7 +132,7 @@ function create() {
   //game.input.onDown.add(createArrow, this);
   game.input.onUp.add(shootArrow, this);
         scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#fff' });
-       xText = game.add.text(16, 516, 'x: 0', { fontSize: '32px', fill: '#fff' });
+       xText = game.add.text(200, 516, 'x: 0', { fontSize: '32px', fill: '#fff' });
 
 }
 
@@ -171,9 +171,6 @@ function update() {
       //console.log(intersects.width);
   //    console.log("WTF");
       resetArrow();
-      score+=45;
- //     console.log(score);
-      scoreText.text = 'Score: ' + score;
     }
   }
 if (!shot2) {
@@ -201,6 +198,14 @@ if (!shot2) {
     if(newArrow2.y>600) {
       resetArrow2();
     }
+    if(checkOverlap(newArrow2, bow)) {
+        //console.log(intersects.width);
+    //    console.log("WTF");
+        resetArrow2();
+        score+=45;
+   //     console.log(score);
+        scoreText.text = 'Score: ' + score;
+      }
     
     
   }
@@ -241,14 +246,18 @@ function shootArrow() {
   }
 
 */
- if(!shot2) {
-    shot2 = true;
+              xText.text = 'mouse x: ' + game.input.mousePointer.x+' mouse y: ' + game.input.mousePointer.y;
+
+  if(!shot2 && game.input.mousePointer.x<793 && game.input.mousePointer.x>757 && game.input.mousePointer.y<290 && game.input.mousePointer.y>230) {
+   shot2 = true;
     newArrow2 = game.add.sprite(bow2.x, bow2.y, 'arrow');
     newArrow2.anchor.setTo(0.5);
     newArrow2.scale.setTo(0.5);
     newArrow2.angle = bow2.angle;
     xVel2 = - (game.input.mousePointer.x-bow2.x)/6;
     yVel2 = - (game.input.mousePointer.y-bow2.y)/6;
+    Client.sendClick(game.input.mousePointer.x, game.input.mousePointer.y, angle2);
+
   }
 
 
