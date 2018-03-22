@@ -109,18 +109,17 @@ function create() {
             console.log("newplayer sent");
 
   Client.askNewPlayer(name, pos);
-  game.world.setBounds(0, 0, 600, 350);
-  bow = game.add.sprite(600/5, 350/2, 'bow');
+  game.world.setBounds(0, 0, 1200, 700);
+  bow = game.add.sprite(1200/5, 700/2, 'bow');
   bow.anchor.setTo(0.5);
   
-  bow2 = game.add.sprite(600-(600/5), 350/2,'bow');
+  bow2 = game.add.sprite(1200-(1200/5), 700/2,'bow');
   bow2.anchor.setTo(0.5);
   
-  bag = game.add.sprite(600/10, 350/2, 'bag');
+  bag = game.add.sprite(1200/10, 700/2, 'bag');
   bag.anchor.setTo(0.5);
-  bag2 = game.add.sprite(600-(600/10), 350/2,'bag');
-  bag2.anchor.setTo(0.5);
-  
+  bag2 = game.add.sprite(1200-(1200/10), 700/2,'bag');
+  bag2.anchor.setTo(0.5);  //game.physics.arcade.enable(newArrow);
   //game.physics.arcade.enable(newArrow);
   
   arrow = game.add.sprite(bow.x, bow.y, 'arrow');
@@ -261,10 +260,10 @@ function shootArrow() {
  // if(!shot2 && game.input.mousePointer.x<793 && game.input.mousePointer.x>757 && game.input.mousePointer.y<290 && game.input.mousePointer.y>230) {
              xText.text = "Click near the bow to fire";
 
-  if(!shot2 && game.input.mousePointer.x<600 
-    && game.input.mousePointer.x>600/2
-      && game.input.mousePointer.y<3*350/4
-      && game.input.mousePointer.y>350/4) {
+  if(!shot2 && game.input.mousePointer.x<1200 
+    && game.input.mousePointer.x>1200/2
+      && game.input.mousePointer.y<3*700/4
+      && game.input.mousePointer.y>700/4) {
               xText.text = 'mouse x: ' + game.input.mousePointer.x+' mouse y: ' + game.input.mousePointer.y;
   shot2 = true;
     newArrow2 = game.add.sprite(bow2.x, bow2.y, 'arrow');
