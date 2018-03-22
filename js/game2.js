@@ -65,14 +65,12 @@ var pos = "left";
 
 
 
-var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'phaser-example', {
+var game = new Phaser.Game(2000, 1000, Phaser.AUTO, 'phaser-example', {
   preload: preload,
   create: create,
   update: update
 });
 
-var xNorm = window.innerWidth/2000;
-var yNorm = window.innerHeight/1000; 
 
 
 var bow, bag, arrow, angle, newArrow;
@@ -111,16 +109,16 @@ function create() {
             console.log("newplayer sent");
 
   Client.askNewPlayer(name, pos);
-  game.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
-  bow = game.add.sprite(window.innerWidth/5, window.innerHeight/2, 'bow');
+  game.world.setBounds(0, 0, 2000, 1000);
+  bow = game.add.sprite(2000/5, 1000/2, 'bow');
   bow.anchor.setTo(0.5);
   
-  bow2 = game.add.sprite(window.innerWidth-(window.innerWidth/5), window.innerHeight/2,'bow');
+  bow2 = game.add.sprite(2000-(2000/5), 1000/2,'bow');
   bow2.anchor.setTo(0.5);
   
-  bag = game.add.sprite(window.innerWidth/10, window.innerHeight/2, 'bag');
+  bag = game.add.sprite(2000/10, 1000/2, 'bag');
   bag.anchor.setTo(0.5);
-  bag2 = game.add.sprite(window.innerWidth-(window.innerWidth/10), window.innerHeight/2,'bag');
+  bag2 = game.add.sprite(2000-(2000/10), 1000/2,'bag');
   bag2.anchor.setTo(0.5);
   
   //game.physics.arcade.enable(newArrow);
@@ -141,9 +139,9 @@ function create() {
 
   //game.input.onDown.add(createArrow, this);
   game.input.onUp.add(shootArrow, this);
-  scoreText = game.add.text(window.innerWidth/20, window.innerHeight/20, 'score: 0', { fontSize: window.innerWidth/40, fill: '#fff' });
+  scoreText = game.add.text(2000/20, 1000/20, 'score: 0', { fontSize: 2000/40, fill: '#fff' });
  
-  xText = game.add.text(window.innerWidth/10, window.innerHeight-(window.innerHeight/10), '', { fontSize: window.innerWidth/40, fill: '#fff' });
+  xText = game.add.text(2000/10, 1000-(1000/10), '', { fontSize: 2000/40, fill: '#fff' });
 
 }
 
@@ -172,7 +170,7 @@ function update() {
      oldy = y;
     
     
-   if(newArrow.y>window.innerHeight || newArrow.x>window.innerWidth
+   if(newArrow.y>1000 || newArrow.x>2000
      || newArrow.y<0 || newArrow.x<0) {
     resetArrow();
     }
@@ -207,7 +205,7 @@ if (!shot2) {
      oldy2 = y2;
     
     
-    if(newArrow2.y>window.innerHeight || newArrow2.x>window.innerWidth
+    if(newArrow2.y>1000 || newArrow2.x>2000
      || newArrow2.y<0 || newArrow2.x<0) {
     resetArrow2();
     }
@@ -263,18 +261,18 @@ function shootArrow() {
  // if(!shot2 && game.input.mousePointer.x<793 && game.input.mousePointer.x>757 && game.input.mousePointer.y<290 && game.input.mousePointer.y>230) {
              xText.text = "Click near the bow to fire";
 
-  if(!shot2 && game.input.mousePointer.x<window.innerWidth 
-    && game.input.mousePointer.x>window.innerWidth/2
-      && game.input.mousePointer.y<3*window.innerHeight/4
-      && game.input.mousePointer.y>window.innerHeight/4) {
+  if(!shot2 && game.input.mousePointer.x<2000 
+    && game.input.mousePointer.x>2000/2
+      && game.input.mousePointer.y<3*1000/4
+      && game.input.mousePointer.y>1000/4) {
               xText.text = 'mouse x: ' + game.input.mousePointer.x+' mouse y: ' + game.input.mousePointer.y;
   shot2 = true;
     newArrow2 = game.add.sprite(bow2.x, bow2.y, 'arrow');
     newArrow2.anchor.setTo(0.5);
     newArrow2.scale.setTo(0.5);
     newArrow2.angle = bow2.angle;
-    xVel2 = - (game.input.mousePointer.x-bow2.x)/6*xNorm;
-    yVel2 = - (game.input.mousePointer.y-bow2.y)/6*yNorm;
+    xVel2 = - (game.input.mousePointer.x-bow2.x)/6;
+    yVel2 = - (game.input.mousePointer.y-bow2.y)/6;
     Client.sendClick(game.input.mousePointer.x, game.input.mousePointer.y, angle2);
 
   }
