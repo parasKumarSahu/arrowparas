@@ -101,6 +101,8 @@ function preload() {
   game.load.image('bow', bowURI);
   game.load.image('arrow', arrowURI);
   game.load.image('bag', bagURI);
+  game.load.image('mountain', "assets/mountain.png");
+  game.load.image('back', "assets/background.png");
 }
 
 function create() {
@@ -108,7 +110,9 @@ function create() {
 
  Client.askNewPlayer(name, pos);
   game.world.setBounds(0, 0, 1200, 700);
-  bow = game.add.sprite(1200/5, 700/2, 'bow');
+  back = game.add.sprite(0, 0, 'back');
+  back.scale.setTo(window.innerWidth/back.width, window.innerHeight/back.height);
+   bow = game.add.sprite(1200/5, 700/2, 'bow');
   bow.anchor.setTo(0.5);
   
   bow2 = game.add.sprite(1200-(1200/5), 700/2,'bow');
@@ -118,7 +122,11 @@ function create() {
   bag.anchor.setTo(0.5);
   bag2 = game.add.sprite(1200-(1200/10), 700/2,'bag');
   bag2.anchor.setTo(0.5);  //game.physics.arcade.enable(newArrow);
-  
+ 
+  mountain = game.add.sprite(game.world.centerX-185, 700/2, 'mountain');
+  bow2.anchor.setTo(0.5);
+  mountain.y=200;
+  mountain.x=600-mountain.width/2;
   arrow = game.add.sprite(bow.x, bow.y, 'arrow');
   arrow.anchor.setTo(0.5);
   arrow.scale.setTo(0.5);
@@ -173,12 +181,13 @@ function update() {
     
     
  //   var intersects = Phaser.Rectangle.intersection(newArrow, bag);
-    if(checkOverlap(newArrow, bag2)) {
-      //console.log(intersects.width);
-  //    console.log("WTF");
+   if(x>580 && x<610 && y > mountain.y+20) {
+    scoreText.text=x +" "+y;
+      resetArrow();
+    }
+   if(checkOverlap(newArrow, bag2)) {
       resetArrow();
       score+=45;
- //     console.log(score);
       scoreText.text = 'Score: ' + score;
     }
   }
@@ -208,7 +217,12 @@ if (!shot2) {
      || newArrow2.y<0 || newArrow2.x<0) {
       resetArrow2();
     }
-    
+
+      if(x2>590 && x2<620 && y2 > mountain.y+20) {
+        scoreText.text=x2 +" "+y2;
+          resetArrow2();
+        }
+      
        if(checkOverlap(newArrow2, bag)) {
           //console.log(intersects.width);
       //    console.log("WTF");
