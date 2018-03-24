@@ -34,7 +34,7 @@ Client.socket.on('move',function(data){
     });
 
 Client.socket.on('mountainY',function(data){
-        console.log("mountainY "+data.mountainY);
+//        console.log("mountainY "+data.mountainY);
         setHeight(data.mountainY);
     });
 

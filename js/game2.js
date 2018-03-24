@@ -46,6 +46,8 @@ function preload() {
   game.load.image('bag', bagURI);
   game.load.image('back', "assets/background.png");
   game.load.image('mountain', "assets/mountain.png");
+  game.load.image('cloud', "assets/cloud.png");
+  game.load.image('cloud2', "assets/cloud2.png");  
 }
 
 function create() {
@@ -55,7 +57,11 @@ function create() {
   game.world.setBounds(0, 0, 1200, 700);
   back = game.add.sprite(0, 0, 'back');
   back.scale.setTo(window.innerWidth/back.width, window.innerHeight/back.height);
-
+  cloud = game.add.sprite(1200/10+20, 450, 'cloud');
+  cloud.anchor.setTo(.5);
+  cloud2 = game.add.sprite(1200-(1200/10)-20, 450, 'cloud2');
+  cloud2.anchor.setTo(.5);
+ 
   bow = game.add.sprite(1200/5, 700/2, 'bow');
   bow.anchor.setTo(0.5);
   
@@ -98,7 +104,7 @@ function update() {
   //console.log(shot);
   if (!shot) {
   //  angle = -1*Math.atan2(game.input.mousePointer.x - bow2.x, -(game.input.mousePointer.y - bow2.y)) * (180 / Math.PI);
-  //      bow.angle = arrow.angle = angle;
+     arrow.angle = bow.angle;
     
   } else {
     
@@ -124,7 +130,7 @@ function update() {
     resetArrow();
     }
      if(x>580 && x<610 && y > mountain.y+20) {
-    scoreText.text=x +" "+y;
+  //  scoreText.text=x +" "+y;
       resetArrow();
     }
   
@@ -165,7 +171,7 @@ if (!shot2) {
 
 
       if(x2>590 && x2<620 && y2 > mountain.y+20) {
-        scoreText.text=x2 +" "+y2;
+  //      scoreText.text=x2 +" "+y2;
           resetArrow2();
         }
 
@@ -206,17 +212,6 @@ function createArrow() {
 }
 
 function shootArrow() {
-/*  if(!shot) {
-    shot = true;
-    newArrow = game.add.sprite(bow.x, bow.y, 'arrow');
-    newArrow.anchor.setTo(0.5);
-    newArrow.scale.setTo(0.5);
-    newArrow.angle = bow.angle;
-    xVel = - (game.input.mousePointer.x-bow.x)/6;
-    yVel = - (game.input.mousePointer.y-bow.y)/6;
-  }
-
-*/
 
  // if(!shot2 && game.input.mousePointer.x<793 && game.input.mousePointer.x>757 && game.input.mousePointer.y<290 && game.input.mousePointer.y>230) {
              xText.text = "Click near the bow to fire";
@@ -234,6 +229,19 @@ function shootArrow() {
     xVel2 = - (game.input.mousePointer.x-bow2.x)/6;
     yVel2 = - (game.input.mousePointer.y-bow2.y)/6;
     Client.sendClick(game.input.mousePointer.x, game.input.mousePointer.y, angle2);
+
+    if(bow2.y==350){
+      bow2.y = 200;
+      arrow2.y = 200; 
+      cloud2.y = 300;
+      bag2.y = 200;
+    }
+    else{
+      bow2.y = 350;
+      arrow2.y = 350;
+      cloud2.y = 450;             
+      bag2.y = 350;
+    }
 
   }
 
@@ -266,7 +274,7 @@ addNewPlayer = function(name){
 movePlayer = function(x, y, angle){
    xText.text = 'mouse x: ' + x+' mouse y: ' + y;
 
-  bow.angle=angle;
+    bow.angle=angle;
     shot = true;
     newArrow = game.add.sprite(bow.x, bow.y, 'arrow');
     newArrow.anchor.setTo(0.5);
@@ -274,6 +282,19 @@ movePlayer = function(x, y, angle){
     newArrow.angle = bow.angle;
     xVel = - (x-bow.x)/6;
     yVel = - (y-bow.y)/6;
+
+   if(bow.y==350){
+      bow.y = 200;
+      arrow.y = 200;
+      cloud.y = 300; 
+      bag.y = 200;
+    }
+    else{
+      bow.y = 350;
+      arrow.y = 350;       
+      cloud.y = 450; 
+      bag.y = 350;
+    }
 }
 
 setHeight = function(height){
