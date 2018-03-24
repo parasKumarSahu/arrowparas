@@ -33,5 +33,9 @@ Client.socket.on('move',function(data){
         movePlayer(data.x,data.y,data.angle);
     });
 
+Client.socket.on('mountainY',function(data){
+        console.log("mountainY "+data.mountainY);
+        setHeight(data.mountainY);
+    });
 
 });

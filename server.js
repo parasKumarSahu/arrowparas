@@ -30,7 +30,8 @@ io.on('connection',function(socket){
             pos: data.pos,
             x: 0,
             y: 0,
-            angle: 0
+            angle: 0,
+            mountainY: 100
         };
         socket.emit('newplayer', getAllPlayers());
         socket.broadcast.emit('allplayer',socket.player);
@@ -42,9 +43,25 @@ io.on('connection',function(socket){
             socket.player.angle = data.angle;
             socket.broadcast.emit('move',socket.player);
         });
+            var inc = true;
+        setInterval(() => {
+            if(socket.player.mountainY == 400){
+                inc = false;
+            }
+            if(socket.player.mountainY == 100){
+                inc = true;
+            }
+            if(inc == true ){
+                socket.player.mountainY += 5;
+            }
+            else{
+                socket.player.mountainY -= 5;                
+            }
+            io.emit('mountainY', socket.player);
+        }, 500);
 
         socket.on('disconnect',function(){
-            io.emit('remove',socket.player.id);
+            io.emit('remove',socket.player.name);
         });
     });
 
