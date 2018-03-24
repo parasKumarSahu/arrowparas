@@ -21,9 +21,12 @@ server.listen(process.env.PORT || 8081,function(){
     console.log('Listening on '+server.address().port);
 });
 
+var connectCounter = 0;
+
 io.on('connection',function(socket){
 
     socket.on('newplayer',function(data){
+        connectCounter++;
         console.log(data.name+" server");
         socket.player = {
             name: data.name,
@@ -45,22 +48,29 @@ io.on('connection',function(socket){
         });
             var inc = true;
         setInterval(() => {
-            if(socket.player.mountainY == 400){
-                inc = false;
-            }
-            if(socket.player.mountainY == 100){
-                inc = true;
-            }
-            if(inc == true ){
-                socket.player.mountainY += 5;
+            if(connectCounter == 2){
+                if(socket.player.mountainY == 400){
+                    inc = false;
+                }
+                if(socket.player.mountainY == 100){
+                    inc = true;
+                }
+                if(inc == true ){
+                    socket.player.mountainY += 5;
+                }
+                else{
+                    socket.player.mountainY -= 5;                
+                }
             }
             else{
-                socket.player.mountainY -= 5;                
-            }
+                socket.player.mountainY = 100;  
+            }                
+
             io.emit('mountainY', socket.player);
         }, 500);
 
         socket.on('disconnect',function(){
+            connectCounter--;
             io.emit('remove',socket.player.name);
         });
     });
