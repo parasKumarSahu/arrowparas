@@ -41,13 +41,15 @@ var scoreText2;
 
 
 function preload() {
-  game.load.image('bow', bowURI);
+  game.load.image('bow', "assets/upperBody.png");
+  game.load.image('bow2', "assets/upperBody2.png");
   game.load.image('arrow', arrowURI);
-  game.load.image('bag', bagURI);
-  game.load.image('back', "assets/background.png");
+  game.load.image('bag', "assets/lowerBody.png");
+  game.load.image('bag2', "assets/lowerBody2.png");
   game.load.image('mountain', "assets/mountain.png");
+  game.load.image('back', "assets/background.png");
   game.load.image('cloud', "assets/cloud.png");
-  game.load.image('cloud2', "assets/cloud2.png");  
+  game.load.image('cloud2', "assets/cloud2.png");
 }
 
 function create() {
@@ -57,41 +59,49 @@ function create() {
   game.world.setBounds(0, 0, 1200, 700);
   back = game.add.sprite(0, 0, 'back');
   back.scale.setTo(window.innerWidth/back.width, window.innerHeight/back.height);
-  cloud = game.add.sprite(1200/10+20, 450, 'cloud');
+   cloud = game.add.sprite(1200/10+20, 450, 'cloud');
   cloud.anchor.setTo(.5);
   cloud2 = game.add.sprite(1200-(1200/10)-20, 450, 'cloud2');
   cloud2.anchor.setTo(.5);
- 
-  bow = game.add.sprite(1200/5, 700/2, 'bow');
-  bow.anchor.setTo(0.5);
+   bow = game.add.sprite(1200/10+10, 700/2-10, 'bow');
+  bow.anchor.setTo(1, .5);
   
-  bow2 = game.add.sprite(1200-(1200/5), 700/2,'bow');
-  bow2.anchor.setTo(0.5);
+  bow2 = game.add.sprite(1200-(1200/10)-10, 700/2-10,'bow2');
+  bow2.anchor.setTo(0, .5);
   
   bag = game.add.sprite(1200/10, 700/2, 'bag');
   bag.anchor.setTo(0.5);
-  bag2 = game.add.sprite(1200-(1200/10), 700/2,'bag');
+  bag2 = game.add.sprite(1200-(1200/10), 700/2,'bag2');
   bag2.anchor.setTo(0.5);  //game.physics.arcade.enable(newArrow);
-  //game.physics.arcade.enable(newArrow);
-   mountain = game.add.sprite(game.world.centerX-185, 700/2, 'mountain');
-  bow2.anchor.setTo(0.5);
+ 
+  mountain = game.add.sprite(game.world.centerX-185, 700/2, 'mountain');
+//  bow2.anchor.setTo(0.5);
   mountain.y=100;
   mountain.x=600-mountain.width/2;
- 
-  arrow = game.add.sprite(bow.x, bow.y, 'arrow');
-  arrow.anchor.setTo(0.5);
+  arrow = game.add.sprite(bow.x, bow.y-bow.height/2, 'arrow');
   arrow.scale.setTo(0.5);
+  arrow.pivot.x = 100;
+  arrow.anchor.setTo(.5);
+  arrow.x=bow.x;
+  arrow.y=bow.y;
+
+
   arrow.angle = bow.angle;
-  x = oldx = arrow.x;
-  y = oldy = arrow.y;
-
+ 
+      x=oldx=arrow.x-(bow.width/2*Math.cos(bow.angle*Math.PI/180));
+      y=oldy=arrow.y-(bow.width/2*Math.sin(bow.angle*Math.PI/180));
   arrow2 = game.add.sprite(bow2.x, bow2.y, 'arrow');
-  arrow2.anchor.setTo(0.5);
   arrow2.scale.setTo(0.5);
-  arrow2.angle = bow2.angle;
-  x2 = oldx2 = arrow2.x;
-  y2 = oldy2 = arrow2.y;
-
+  arrow2.pivot.x = -100;
+  arrow2.anchor.setTo(.5);
+  arrow2.x=bow2.x;
+  arrow2.y=bow2.y;
+ 
+ arrow2.angle = bow2.angle;
+ 
+      x2=oldx2=arrow2.x-(1-Math.cos(bow2.angle*Math.PI/180)*bow2.width/2);
+      y2=oldy2=arrow2.y+(bow2.width/2*Math.sin(bow2.angle*Math.PI/180));
+ 
   //game.input.onDown.add(createArrow, this);
   game.input.onUp.add(shootArrow, this);
   scoreText = game.add.text(window.innerWidth/20, window.innerHeight/20, 'score: 0', { fontSize: window.innerWidth/40, fill: '#fff' });
@@ -128,9 +138,11 @@ function update() {
    if(newArrow.y>window.innerHeight || newArrow.x>window.innerWidth
      || newArrow.y<0 || newArrow.x<0) {
     resetArrow();
+          game.add.tween(newArrow).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
     }
      if(x>580 && x<610 && y > mountain.y+20) {
   //  scoreText.text=x +" "+y;
+          game.add.tween(newArrow).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
       resetArrow();
     }
   
@@ -139,6 +151,7 @@ function update() {
     if(checkOverlap(newArrow, bag2)) {
       //console.log(intersects.width);
   //    console.log("WTF");
+          game.add.tween(newArrow).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
       resetArrow();
     }
   }
@@ -153,7 +166,6 @@ if (!shot2) {
     x2 += xVel2;
     y2 += yVel2;
     yVel2 += g;
-
     newArrow2.x = x2;
     newArrow2.y = y2;
     
@@ -167,12 +179,14 @@ if (!shot2) {
     if(newArrow2.y>window.innerHeight || newArrow2.x>window.innerWidth
      || newArrow2.y<0 || newArrow2.x<0) {
     resetArrow2();
+          game.add.tween(newArrow2).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
     }
 
 
       if(x2>590 && x2<620 && y2 > mountain.y+20) {
   //      scoreText.text=x2 +" "+y2;
           resetArrow2();
+           game.add.tween(newArrow2).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
         }
 
     if(checkOverlap(newArrow2, bag)) {
@@ -182,6 +196,8 @@ if (!shot2) {
         score+=45;
    //     console.log(score);
         scoreText.text = 'Score: ' + score;
+          game.add.tween(newArrow2).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
+
       }
     
     
@@ -201,8 +217,8 @@ function resetArrow2() {
   arrow2.x=bow2.x;
   arrow2.y=bow2.y;
 
-  x2=oldx2=arrow2.x;
-  y2=oldy2=arrow2.y;
+       x2=oldx2=arrow2.x-(1-Math.cos(bow2.angle*Math.PI/180)*bow2.width/2);
+      y2=oldy2=arrow2.y+(bow2.width/2*Math.sin(bow2.angle*Math.PI/180));
 }
 
 
@@ -222,6 +238,11 @@ function shootArrow() {
       && game.input.mousePointer.y>700/4) {
               xText.text = 'mouse x: ' + game.input.mousePointer.x+' mouse y: ' + game.input.mousePointer.y;
   shot2 = true;
+ //   xText.text = bow2.angle;
+      x2=oldx2=arrow2.x-(1-Math.cos(bow2.angle*Math.PI/180)*bow2.width/2);
+      y2=oldy2=arrow2.y+(bow2.width/2*Math.sin(bow2.angle*Math.PI/180));
+
+
     newArrow2 = game.add.sprite(bow2.x, bow2.y, 'arrow');
     newArrow2.anchor.setTo(0.5);
     newArrow2.scale.setTo(0.5);
@@ -230,14 +251,15 @@ function shootArrow() {
     yVel2 = - (game.input.mousePointer.y-bow2.y)/6;
     Client.sendClick(game.input.mousePointer.x, game.input.mousePointer.y, angle2);
 
-    if(bow2.y==350){
-      bow2.y = 200;
+
+    if(bow2.y==340){
+      bow2.y = 190;
       arrow2.y = 200; 
       cloud2.y = 300;
       bag2.y = 200;
     }
     else{
-      bow2.y = 350;
+      bow2.y = 340;
       arrow2.y = 350;
       cloud2.y = 450;             
       bag2.y = 350;
@@ -253,7 +275,7 @@ function checkOverlap(spriteA, spriteB) {
 
     var boundsA = spriteA.getBounds();
     var boundsB = spriteB.getBounds();
-
+    boundsB.y -= 20;
     return Phaser.Rectangle.intersects(boundsA, boundsB);
 
 }
@@ -283,18 +305,19 @@ movePlayer = function(x, y, angle){
     xVel = - (x-bow.x)/6;
     yVel = - (y-bow.y)/6;
 
-   if(bow.y==350){
-      bow.y = 200;
+   if(bow.y==340){
+      bow.y = 190;
       arrow.y = 200;
       cloud.y = 300; 
       bag.y = 200;
     }
     else{
-      bow.y = 350;
+      bow.y = 340;
       arrow.y = 350;       
       cloud.y = 450; 
       bag.y = 350;
     }
+
 }
 
 setHeight = function(height){
