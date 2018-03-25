@@ -50,10 +50,19 @@ function preload() {
   game.load.image('back', "assets/background.png");
   game.load.image('cloud', "assets/cloud.png");
   game.load.image('cloud2', "assets/cloud2.png");
+  game.load.audio('music', "assets/music.mp3");
+  game.load.audio('hitMountain', "assets/hitMountain.mp3");
+  game.load.audio('hitPlayer', "assets/pain.mp3");
+  game.load.audio('releaseArrow', "assets/releaseArrowShort.mp3");  
 }
 
 function create() {
             console.log("newplayer sent");
+  music = game.add.audio('music');
+  game.sound.setDecodedCallback(music, start, this);
+  releaseArrow = game.add.audio("releaseArrow");
+  hitMountain = game.add.audio("hitMountain");
+  hitPlayer = game.add.audio("hitPlayer");
 
   Client.askNewPlayer(name, pos);
   game.world.setBounds(0, 0, 1200, 700);
@@ -142,6 +151,7 @@ function update() {
     }
      if(x>580 && x<610 && y > mountain.y+20) {
   //  scoreText.text=x +" "+y;
+              hitMountain.play();
           game.add.tween(newArrow).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
       resetArrow();
     }
@@ -151,6 +161,8 @@ function update() {
     if(checkOverlap(newArrow, bag2)) {
       //console.log(intersects.width);
   //    console.log("WTF");
+     hitPlayer.play();
+ 
           game.add.tween(newArrow).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
       resetArrow();
     }
@@ -185,6 +197,7 @@ if (!shot2) {
 
       if(x2>590 && x2<620 && y2 > mountain.y+20) {
   //      scoreText.text=x2 +" "+y2;
+            hitMountain.play();
           resetArrow2();
            game.add.tween(newArrow2).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
         }
@@ -192,6 +205,8 @@ if (!shot2) {
     if(checkOverlap(newArrow2, bag)) {
         //console.log(intersects.width);
     //    console.log("WTF");
+    hitPlayer.play();
+
         resetArrow2();
         score+=45;
    //     console.log(score);
@@ -232,12 +247,15 @@ function shootArrow() {
  // if(!shot2 && game.input.mousePointer.x<793 && game.input.mousePointer.x>757 && game.input.mousePointer.y<290 && game.input.mousePointer.y>230) {
              xText.text = "Click near the bow to fire";
 
-  if(!shot2 && game.input.mousePointer.x<1200 
+  if(!shot2 && game.input.mousePointer.x<window.innerWidth 
     && game.input.mousePointer.x>1200/2
       && game.input.mousePointer.y<3*700/4
       && game.input.mousePointer.y>700/4) {
               xText.text = 'mouse x: ' + game.input.mousePointer.x+' mouse y: ' + game.input.mousePointer.y;
   shot2 = true;
+
+     releaseArrow.play();
+ 
  //   xText.text = bow2.angle;
       x2=oldx2=arrow2.x-(1-Math.cos(bow2.angle*Math.PI/180)*bow2.width/2);
       y2=oldy2=arrow2.y+(bow2.width/2*Math.sin(bow2.angle*Math.PI/180));
@@ -275,7 +293,7 @@ function checkOverlap(spriteA, spriteB) {
 
     var boundsA = spriteA.getBounds();
     var boundsB = spriteB.getBounds();
-    boundsB.y -= 20;
+    boundsB.y -= 30;
     return Phaser.Rectangle.intersects(boundsA, boundsB);
 
 }
@@ -298,6 +316,9 @@ movePlayer = function(x, y, angle){
 
     bow.angle=angle;
     shot = true;
+
+    releaseArrow.play();
+
     newArrow = game.add.sprite(bow.x, bow.y, 'arrow');
     newArrow.anchor.setTo(0.5);
     newArrow.scale.setTo(0.5);
@@ -322,4 +343,9 @@ movePlayer = function(x, y, angle){
 
 setHeight = function(height){
     mountain.y=height;
+}
+
+function start() {
+
+    music.loopFull(0.8);
 }
