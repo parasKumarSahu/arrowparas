@@ -1,5 +1,5 @@
 
-var name ="Ayush";
+var name ="Maisha";
 var pos = "left";
 
 
@@ -38,7 +38,7 @@ var arrowCreated2 = false;
 var shot2 = false;
 var scoreText2;
 
-
+var dragging = false;
 
 function preload() {
   game.load.image('bow', "assets/upperBody.png");
@@ -114,6 +114,7 @@ function create() {
   //game.input.onDown.add(createArrow, this);
   game.input.onUp.add(shootArrow, this);
   scoreText = game.add.text(window.innerWidth/20, window.innerHeight/20, 'score: 0', { fontSize: window.innerWidth/40, fill: '#fff' });
+  scoreText2 = game.add.text(window.innerWidth-(window.innerWidth/5), window.innerHeight/20, name, { fontSize: window.innerWidth/40, fill: '#fff' });
  
   xText = game.add.text(window.innerWidth/10, window.innerHeight-(window.innerHeight/10), '', { fontSize: window.innerWidth/40, fill: '#fff' });
 
@@ -123,7 +124,7 @@ function update() {
   //console.log(shot);
   if (!shot) {
   //  angle = -1*Math.atan2(game.input.mousePointer.x - bow2.x, -(game.input.mousePointer.y - bow2.y)) * (180 / Math.PI);
-     arrow.angle = bow.angle;
+     arrow.angle = bow.angle = 90;
     
   } else {
     
@@ -169,8 +170,22 @@ function update() {
   }
 if (!shot2) {
     angle2 = Math.atan2(game.input.mousePointer.x - bow2.x, -(game.input.mousePointer.y - bow2.y)) * (180 / Math.PI)-180;
-        bow2.angle = arrow2.angle = angle2;
-    
+        if(game.input.activePointer.isDown && !dragging)
+        {
+            dragging = true;
+        }
+        if(!game.input.activePointer.isDown && dragging)
+        {
+            dragging = false;
+        }
+
+        if(dragging)
+        {
+         bow2.angle = arrow2.angle = angle2;    
+        }
+        else{
+          bow2.angle = arrow2.angle = -90; 
+        }   
   } else {
     
     //console.log("x",x,"y",y,"xVel",xVel,"yVel",yVel,"oldx",oldx,"oldy",oldy);
@@ -245,7 +260,7 @@ function createArrow() {
 function shootArrow() {
 
  // if(!shot2 && game.input.mousePointer.x<793 && game.input.mousePointer.x>757 && game.input.mousePointer.y<290 && game.input.mousePointer.y>230) {
-             xText.text = "Click near the bow to fire";
+               xText.text = "Drag mouse behind the bow to rotate the bow and relase mouse to fire";
 
   if(!shot2 && game.input.mousePointer.x<window.innerWidth 
     && game.input.mousePointer.x>1200/2

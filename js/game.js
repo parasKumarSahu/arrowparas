@@ -37,6 +37,7 @@ var arrowCreated2 = false;
 var shot2 = false;
 var scoreText2;
 
+var dragging = false;
 
 
 function preload() {
@@ -114,6 +115,7 @@ function create() {
   game.input.onUp.add(shootArrow, this);
         scoreText = game.add.text(window.innerWidth-(window.innerWidth/5), window.innerHeight/20, 'score: 0', { fontSize: window.innerWidth/40, fill: '#fff' });
         xText = game.add.text(window.innerWidth/10, window.innerHeight-(window.innerHeight/10), '', { fontSize: window.innerWidth/40, fill: '#fff' });
+		scoreText2 = game.add.text(window.innerWidth/20, window.innerHeight/20, name, { fontSize: window.innerWidth/40, fill: '#fff' });
 
 }
 
@@ -122,7 +124,22 @@ function update() {
  
   if (!shot) {
     angle = Math.atan2(game.input.mousePointer.x - bow.x, -(game.input.mousePointer.y - bow.y)) * (180 / Math.PI) - 180;
-     bow.angle = arrow.angle = angle;    
+        if(game.input.activePointer.isDown && !dragging)
+        {
+            dragging = true;
+        }
+        if(!game.input.activePointer.isDown && dragging)
+        {
+            dragging = false;
+        }
+
+        if(dragging)
+        {
+		     bow.angle = arrow.angle = angle;    
+        }
+        else{
+	        bow.angle = arrow.angle = 90;	
+        }
   } else {
     
     //console.log("x",x,"y",y,"xVel",xVel,"yVel",yVel,"oldx",oldx,"oldy",oldy);
@@ -167,7 +184,7 @@ function update() {
   }
 if (!shot2) {
 //    angle2 = 180-Math.atan2(game.input.mousePointer.x - bow.x, -(game.input.mousePointer.y - bow.y)) * (180 / Math.PI);
-        arrow2.angle = bow2.angle;
+        arrow2.angle = bow2.angle = -90;
     
   } else {
     
@@ -235,7 +252,7 @@ function createArrow() {
 }
 
 function shootArrow() {
-             xText.text = "Click near the bow to fire";
+             xText.text = "Drag mouse behind the bow to rotate the bow and relase mouse to fire";
 
  if(!shot && game.input.mousePointer.x>0 
     && game.input.mousePointer.x<1200/2
