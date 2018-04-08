@@ -39,7 +39,6 @@ var scoreText2;
 
 var dragging = false;
 
-
 function preload() {
   game.load.image('bow', "assets/upperBody.png");
   game.load.image('bow2', "assets/upperBody2.png");
@@ -113,9 +112,10 @@ function create() {
  
   //game.input.onDown.add(createArrow, this);
   game.input.onUp.add(shootArrow, this);
-        scoreText = game.add.text(window.innerWidth-(window.innerWidth/5), window.innerHeight/20, 'score: 0', { fontSize: window.innerWidth/40, fill: '#fff' });
+        scoreText = game.add.text(window.innerWidth-(window.innerWidth/5), window.innerHeight/20, 'Not connected', { fontSize: window.innerWidth/40, fill: '#fff' });
         xText = game.add.text(window.innerWidth/10, window.innerHeight-(window.innerHeight/10), '', { fontSize: window.innerWidth/40, fill: '#fff' });
 		scoreText2 = game.add.text(window.innerWidth/20, window.innerHeight/20, name, { fontSize: window.innerWidth/40, fill: '#fff' });
+ 
 
 }
 
@@ -178,7 +178,7 @@ function update() {
     hitPlayer.play();
       resetArrow();
       score+=45;
-      scoreText.text = 'Score: ' + score;
+      scoreText2.text = name+' Score: ' + score;
           game.add.tween(newArrow).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
     }
   }
@@ -269,8 +269,8 @@ function shootArrow() {
  //   scoreText.text = newArrow.x;
     newArrow.scale.setTo(0.5);
     newArrow.angle = bow.angle;
-    xVel = - (game.input.mousePointer.x-bow.x)/6;
-    yVel = - (game.input.mousePointer.y-bow.y)/6;
+    xVel = - (game.input.mousePointer.x-bow.x)/5;
+    yVel = - (game.input.mousePointer.y-bow.y)/5;
 
     releaseArrow.play();
 
@@ -295,8 +295,16 @@ function checkOverlap(spriteA, spriteB) {
 
     var boundsA = spriteA.getBounds();
     var boundsB = spriteB.getBounds();
-    boundsB.y -= 30;
-    return Phaser.Rectangle.intersects(boundsA, boundsB);
+    boundsB.y -= 40;
+    boundsB.width-=50;
+    boundsB.height+=20;
+    if(spriteB.x<350){
+      boundsB.x+=45;
+    }
+//    game.debug.spriteBounds(spriteA);
+
+ //  game.debug.geom( boundsB, 'rgba(255,0,0,1)' ) ;
+     return Phaser.Rectangle.intersects(boundsA, boundsB);
 
 }
 
@@ -328,8 +336,8 @@ movePlayer = function(x, y, angle){
     newArrow2.anchor.setTo(0.5);
     newArrow2.scale.setTo(0.5);
     newArrow2.angle = bow2.angle;
-    xVel2 = - (x-bow2.x)/6;
-    yVel2 = - (y-bow2.y)/6;
+    xVel2 = - (x-bow2.x)/5;
+    yVel2 = - (y-bow2.y)/5;
  
    if(bow2.y==340){
       bow2.y = 190;
@@ -347,7 +355,8 @@ movePlayer = function(x, y, angle){
 }
 
 setHeight = function(height){
-    mountain.y=height;
+   mountain.y=height;
+// mountain.y=700;
 }
 
 function start() {

@@ -113,8 +113,8 @@ function create() {
  
   //game.input.onDown.add(createArrow, this);
   game.input.onUp.add(shootArrow, this);
-  scoreText = game.add.text(window.innerWidth/20, window.innerHeight/20, 'score: 0', { fontSize: window.innerWidth/40, fill: '#fff' });
-  scoreText2 = game.add.text(window.innerWidth-(window.innerWidth/5), window.innerHeight/20, name, { fontSize: window.innerWidth/40, fill: '#fff' });
+  scoreText = game.add.text(window.innerWidth/20, window.innerHeight/20, 'Not connected', { fontSize: window.innerWidth/40, fill: '#fff' });
+  scoreText2 = game.add.text(window.innerWidth-(window.innerWidth/4), window.innerHeight/20, name, { fontSize: window.innerWidth/40, fill: '#fff' });
  
   xText = game.add.text(window.innerWidth/10, window.innerHeight-(window.innerHeight/10), '', { fontSize: window.innerWidth/40, fill: '#fff' });
 
@@ -225,7 +225,7 @@ if (!shot2) {
         resetArrow2();
         score+=45;
    //     console.log(score);
-        scoreText.text = 'Score: ' + score;
+        scoreText2.text = name+' Score: ' + score;
           game.add.tween(newArrow2).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
 
       }
@@ -264,7 +264,6 @@ function shootArrow() {
 
   if(!shot2 && game.input.mousePointer.x<window.innerWidth 
     && game.input.mousePointer.x>1200/2
-      && game.input.mousePointer.y<3*700/4
       && game.input.mousePointer.y>700/4) {
               xText.text = 'mouse x: ' + game.input.mousePointer.x+' mouse y: ' + game.input.mousePointer.y;
   shot2 = true;
@@ -280,8 +279,8 @@ function shootArrow() {
     newArrow2.anchor.setTo(0.5);
     newArrow2.scale.setTo(0.5);
     newArrow2.angle = bow2.angle;
-    xVel2 = - (game.input.mousePointer.x-bow2.x)/6;
-    yVel2 = - (game.input.mousePointer.y-bow2.y)/6;
+    xVel2 = - (game.input.mousePointer.x-bow2.x)/5;
+    yVel2 = - (game.input.mousePointer.y-bow2.y)/5;
     Client.sendClick(game.input.mousePointer.x, game.input.mousePointer.y, angle2);
 
 
@@ -308,8 +307,16 @@ function checkOverlap(spriteA, spriteB) {
 
     var boundsA = spriteA.getBounds();
     var boundsB = spriteB.getBounds();
-    boundsB.y -= 30;
-    return Phaser.Rectangle.intersects(boundsA, boundsB);
+    boundsB.y -= 40;
+    boundsB.width-=50;
+    boundsB.height+=20;
+    if(spriteB.x<350){
+      boundsB.x+=45;
+    }
+//    game.debug.spriteBounds(spriteA);
+
+ //  game.debug.geom( boundsB, 'rgba(255,0,0,1)' ) ;
+     return Phaser.Rectangle.intersects(boundsA, boundsB);
 
 }
 
@@ -338,8 +345,8 @@ movePlayer = function(x, y, angle){
     newArrow.anchor.setTo(0.5);
     newArrow.scale.setTo(0.5);
     newArrow.angle = bow.angle;
-    xVel = - (x-bow.x)/6;
-    yVel = - (y-bow.y)/6;
+    xVel = - (x-bow.x)/5;
+    yVel = - (y-bow.y)/5;
 
    if(bow.y==340){
       bow.y = 190;
