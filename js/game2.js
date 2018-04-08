@@ -12,10 +12,10 @@ var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '
   update: update
 });
 
-
+var emitter;
 
 var bow, bag, arrow, angle, newArrow;
-var score=0;
+var Health=100;
 var x;
 var y;
 var oldx, oldy;
@@ -28,7 +28,7 @@ var scoreText;
 var xText;
 
 var bow2, bag2, arrow2, angle2, newArrow2;
-var score2=0;
+var Health2=100;
 var x2;
 var y2;
 var oldx2, oldy2;
@@ -41,6 +41,8 @@ var scoreText2;
 var dragging = false;
 
 function preload() {
+game.load.image('diamond', 'assets/diamond.png');
+
   game.load.image('bow', "assets/upperBody.png");
   game.load.image('bow2', "assets/upperBody2.png");
   game.load.image('arrow', arrowURI);
@@ -55,6 +57,7 @@ function preload() {
   game.load.audio('hitPlayer', "assets/pain.mp3");
   game.load.audio('releaseArrow', "assets/releaseArrowShort.mp3");  
 }
+
 
 function create() {
             console.log("newplayer sent");
@@ -113,10 +116,20 @@ function create() {
  
   //game.input.onDown.add(createArrow, this);
   game.input.onUp.add(shootArrow, this);
-  scoreText = game.add.text(window.innerWidth/20, window.innerHeight/20, 'Not connected', { fontSize: window.innerWidth/40, fill: '#fff' });
-  scoreText2 = game.add.text(window.innerWidth-(window.innerWidth/4), window.innerHeight/20, name, { fontSize: window.innerWidth/40, fill: '#fff' });
+  scoreText = game.add.text(window.innerWidth/20, window.innerHeight/20, 'Not connected', { fontSize: window.innerWidth/50, fill: '#fff' });
+  scoreText2 = game.add.text(window.innerWidth-(window.innerWidth/4), window.innerHeight/20, name+" Health = 100", { fontSize: window.innerWidth/50, fill: '#fff' });
  
-  xText = game.add.text(window.innerWidth/10, window.innerHeight-(window.innerHeight/10), '', { fontSize: window.innerWidth/40, fill: '#fff' });
+  xText = game.add.text(window.innerWidth/10, window.innerHeight-(window.innerHeight/10), '', { fontSize: window.innerWidth/50, fill: '#fff' });
+
+
+  game.physics.startSystem(Phaser.Physics.ARCADE);
+
+    emitter = game.add.emitter(0, 0, 100);
+
+    emitter.makeParticles('diamond');
+    emitter.gravity = 200;
+
+  //////////////////////////////////////////////
 
 }
 
@@ -163,9 +176,14 @@ function update() {
       //console.log(intersects.width);
   //    console.log("WTF");
       resetArrow();
-     hitPlayer.play();
-     score2+=10;
-       scoreText.text = name2+' Score: ' + score2;
+          hitPlayer.play();
+ emitter.x = bag2.x;
+    emitter.y = bag2.y-50;
+
+    emitter.start(true, 2000, null, 10);
+
+    Health2-=10;
+       scoreText2.text = name+' Health = ' + Health2;
   
           game.add.tween(newArrow).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
     }
@@ -222,12 +240,17 @@ if (!shot2) {
     if(checkOverlap(newArrow2, bag)) {
         //console.log(intersects.width);
     //    console.log("WTF");
-    hitPlayer.play();
-
+          hitPlayer.play();
+      
         resetArrow2();
-        score+=10;
+   emitter.x = bag.x;
+    emitter.y = bag.y-50;
+
+    emitter.start(true, 2000, null, 10);
+
+        Health-=10;
    //     console.log(score);
-        scoreText2.text = name+' Score: ' + score;
+        scoreText.text = name2+' Health = ' + Health;
           game.add.tween(newArrow2).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
 
       }
@@ -266,7 +289,7 @@ function shootArrow() {
 
   if(!shot2 && game.input.mousePointer.x<window.innerWidth 
     && game.input.mousePointer.x>1200/2
-      && game.input.mousePointer.y>700/4) {
+      && game.input.mousePointer.y>700/6) {
  //             xText.text = 'mouse x: ' + game.input.mousePointer.x+' mouse y: ' + game.input.mousePointer.y;
   xText.text = "";
  shot2 = true;
@@ -333,7 +356,7 @@ var arrowURI = 'assets/arrow.gif';
 
 
 addNewPlayer = function(name){
-    scoreText.text = name;
+    scoreText.text = name + " Health = 100";
     name2=name;
 };
 
@@ -380,3 +403,4 @@ function start() {
 
     music.loopFull(0.8);
 }
+
