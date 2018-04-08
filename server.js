@@ -71,7 +71,7 @@ io.on('connection',function(socket){
 
         socket.on('disconnect',function(){
             connectCounter--;
-            io.emit('remove',socket.player.name);
+            io.emit('remove', getAllPlayers());
         });
     });
 

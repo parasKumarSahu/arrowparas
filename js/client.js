@@ -37,5 +37,8 @@ Client.socket.on('mountainY',function(data){
 //        console.log("mountainY "+data.mountainY);
         setHeight(data.mountainY);
     });
-
+Client.socket.on('remove',function(data){
+//        console.log("mountainY "+data.mountainY);
+        removePlayer(data.name);
+    });
 });

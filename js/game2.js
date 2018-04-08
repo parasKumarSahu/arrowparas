@@ -1,5 +1,5 @@
 
-var name ="Maisha";
+var name ="Player2";
 var pos = "left";
 var name2="";
 
@@ -116,8 +116,8 @@ function create() {
  
   //game.input.onDown.add(createArrow, this);
   game.input.onUp.add(shootArrow, this);
-  scoreText = game.add.text(window.innerWidth/20, window.innerHeight/20, 'Not connected', { fontSize: window.innerWidth/50, fill: '#fff' });
-  scoreText2 = game.add.text(window.innerWidth-(window.innerWidth/4), window.innerHeight/20, name+" Health = 100", { fontSize: window.innerWidth/50, fill: '#fff' });
+  scoreText = game.add.text(window.innerWidth/20, window.innerHeight/20, 'Not connected', { fontSize: window.innerWidth/70, fill: '#fff' });
+  scoreText2 = game.add.text(window.innerWidth-(window.innerWidth/4), window.innerHeight/20, name+"(You) Health = 100", { fontSize: window.innerWidth/70, fill: '#fff' });
  
   xText = game.add.text(window.innerWidth/10, window.innerHeight-(window.innerHeight/10), '', { fontSize: window.innerWidth/50, fill: '#fff' });
 
@@ -183,7 +183,7 @@ function update() {
     emitter.start(true, 2000, null, 10);
 
     Health2-=10;
-       scoreText2.text = name+' Health = ' + Health2;
+       scoreText2.text = name+'(You) Health = ' + Health2;
   
           game.add.tween(newArrow).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
     }
@@ -310,7 +310,7 @@ function shootArrow() {
     Client.sendClick(game.input.mousePointer.x, game.input.mousePointer.y, angle2);
 
 
-    if(bow2.y==340){
+    if(bow2.y==340 && name2!=""){
       bow2.y = 190;
       arrow2.y = 200; 
       cloud2.y = 300;
@@ -361,7 +361,7 @@ addNewPlayer = function(name){
 };
 
 movePlayer = function(xi, yi, angle){
-   xText.text = 'mouse x: ' + x+' mouse y: ' + y;
+ //  xText.text = 'mouse x: ' + x+' mouse y: ' + y;
 
     bow.angle=angle;
     shot = true;
@@ -404,3 +404,15 @@ function start() {
     music.loopFull(0.8);
 }
 
+function removePlayer(namei){
+  scoreText.text = name2+" Disconnected";
+  name2="";
+  bow.y = 340;
+  arrow.y = 350;       
+  cloud.y = 450; 
+  bag.y = 350;
+  bow2.y = 340;
+  arrow2.y = 350;
+  cloud2.y = 450;             
+  bag2.y = 350;
+}
