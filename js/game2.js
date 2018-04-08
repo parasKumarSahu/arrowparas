@@ -1,7 +1,7 @@
 
 var name ="Maisha";
 var pos = "left";
-
+var name2="";
 
 
 
@@ -152,9 +152,9 @@ function update() {
     }
      if(x>580 && x<610 && y > mountain.y+20) {
   //  scoreText.text=x +" "+y;
+      resetArrow();
               hitMountain.play();
           game.add.tween(newArrow).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
-      resetArrow();
     }
   
     
@@ -162,10 +162,12 @@ function update() {
     if(checkOverlap(newArrow, bag2)) {
       //console.log(intersects.width);
   //    console.log("WTF");
-     hitPlayer.play();
- 
-          game.add.tween(newArrow).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
       resetArrow();
+     hitPlayer.play();
+     score2+=10;
+       scoreText.text = name2+' Score: ' + score2;
+  
+          game.add.tween(newArrow).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
     }
   }
 if (!shot2) {
@@ -223,7 +225,7 @@ if (!shot2) {
     hitPlayer.play();
 
         resetArrow2();
-        score+=45;
+        score+=10;
    //     console.log(score);
         scoreText2.text = name+' Score: ' + score;
           game.add.tween(newArrow2).to( { alpha: 0 }, 10000, Phaser.Easing.Linear.None, true);
@@ -239,9 +241,9 @@ function resetArrow() {
   arrow.x=bow.x;
   arrow.y=bow.y;
 
-  x=oldx=arrow.x;
-  y=oldy=arrow.y;
-}
+      x=oldx=arrow.x-(bow.width/2*Math.cos(bow.angle*Math.PI/180));
+      y=oldy=arrow.y-(bow.width/2*Math.sin(bow.angle*Math.PI/180));
+ }
 function resetArrow2() {
   shot2 = false;
   arrow2.x=bow2.x;
@@ -265,8 +267,9 @@ function shootArrow() {
   if(!shot2 && game.input.mousePointer.x<window.innerWidth 
     && game.input.mousePointer.x>1200/2
       && game.input.mousePointer.y>700/4) {
-              xText.text = 'mouse x: ' + game.input.mousePointer.x+' mouse y: ' + game.input.mousePointer.y;
-  shot2 = true;
+ //             xText.text = 'mouse x: ' + game.input.mousePointer.x+' mouse y: ' + game.input.mousePointer.y;
+  xText.text = "";
+ shot2 = true;
 
      releaseArrow.play();
  
@@ -331,22 +334,28 @@ var arrowURI = 'assets/arrow.gif';
 
 addNewPlayer = function(name){
     scoreText.text = name;
+    name2=name;
 };
 
-movePlayer = function(x, y, angle){
+movePlayer = function(xi, yi, angle){
    xText.text = 'mouse x: ' + x+' mouse y: ' + y;
 
     bow.angle=angle;
     shot = true;
 
-    releaseArrow.play();
-
+ 
+      x=oldx=arrow.x-(bow.width/2*Math.cos(bow.angle*Math.PI/180));
+      y=oldy=arrow.y-(bow.width/2*Math.sin(bow.angle*Math.PI/180));
+  //   console.log("x2="+x+" y2="+y+" angle2="+angle);
+ 
     newArrow = game.add.sprite(bow.x, bow.y, 'arrow');
     newArrow.anchor.setTo(0.5);
     newArrow.scale.setTo(0.5);
     newArrow.angle = bow.angle;
-    xVel = - (x-bow.x)/5;
-    yVel = - (y-bow.y)/5;
+    xVel = - (xi-bow.x)/5;
+    yVel = - (yi-bow.y)/5;
+
+    releaseArrow.play();
 
    if(bow.y==340){
       bow.y = 190;
