@@ -34,7 +34,7 @@ io.on('connection',function(socket){
             x: 0,
             y: 0,
             angle: 0,
-            mountainY: 100
+            mountainY: 200
         };
         socket.emit('newplayer', getAllPlayers());
         socket.broadcast.emit('allplayer',socket.player);
@@ -52,18 +52,18 @@ io.on('connection',function(socket){
                 if(socket.player.mountainY == 400){
                     inc = false;
                 }
-                if(socket.player.mountainY == 100){
+                if(socket.player.mountainY == 200){
                     inc = true;
                 }
                 if(inc == true ){
-                    socket.player.mountainY += 5;
+                    socket.player.mountainY += 2;
                 }
                 else{
-                    socket.player.mountainY -= 5;                
+                    socket.player.mountainY -= 2;                
                 }
             }
             else{
-                socket.player.mountainY = 100;  
+                socket.player.mountainY = 200;  
             }                
 
             io.emit('mountainY', socket.player);

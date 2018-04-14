@@ -14,7 +14,7 @@ var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, '
 
 var emitter;
 
-var bow, bag, arrow, angle, newArrow;
+var bow, bag, arrow, angle, newArrow, fire;
 var Health=100;
 var x;
 var y;
@@ -42,6 +42,7 @@ var dragging = false;
 
 function preload() {
 game.load.image('diamond', 'assets/diamond.png');
+game.load.image('fire', 'assets/fire.jpg');
 
   game.load.image('bow', "assets/upperBody.png");
   game.load.image('bow2', "assets/upperBody2.png");
@@ -88,7 +89,7 @@ function create() {
  
   mountain = game.add.sprite(game.world.centerX-185, 700/2, 'mountain');
 //  bow2.anchor.setTo(0.5);
-  mountain.y=100;
+  mountain.y=200;
   mountain.x=600-mountain.width/2;
   arrow = game.add.sprite(bow.x, bow.y-bow.height/2, 'arrow');
   arrow.scale.setTo(0.5);
@@ -129,6 +130,11 @@ function create() {
     emitter.makeParticles('diamond');
     emitter.gravity = 200;
 
+    fireEmitter = game.add.emitter(0, 0, 100);
+
+    fireEmitter.makeParticles('fire');
+    fireEmitter.gravity = 100;
+
   //////////////////////////////////////////////
 
 }
@@ -150,7 +156,10 @@ function update() {
 
     newArrow.x = x;
     newArrow.y = y;
-    
+      fireEmitter.x = x;
+     fireEmitter.y = y;
+       fireEmitter.start(true, 200, null, 1);
+
     
     arrowAngle = Math.atan2(x-oldx, -(y-oldy)) * (180 / Math.PI);
     newArrow.angle = arrowAngle;
@@ -158,12 +167,13 @@ function update() {
      oldy = y;
     
     
-   if(newArrow.y>window.innerHeight || newArrow.x>window.innerWidth
-     || newArrow.y<0 || newArrow.x<0) {
-    resetArrow();
+     if(newArrow.y>window.innerHeight+50 || newArrow.x>window.innerWidth+50
+     || newArrow.y<0-100 || newArrow.x<0-50) {
+      resetArrow();
           game.add.tween(newArrow).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
     }
-     if(x>580 && x<610 && y > mountain.y+20) {
+
+    if(x>580 && x<610 && y > mountain.y+20) {
   //  scoreText.text=x +" "+y;
       resetArrow();
               hitMountain.play();
@@ -189,7 +199,7 @@ function update() {
     }
   }
 if (!shot2) {
-    angle2 = Math.atan2(game.input.mousePointer.x - bow2.x, -(game.input.mousePointer.y - bow2.y)) * (180 / Math.PI)-180;
+    angle2 = Math.atan2(game.input.mousePointer.x - bow2.x, -((game.input.mousePointer.y+60) - bow2.y)) * (180 / Math.PI)-180;
         if(game.input.activePointer.isDown && !dragging)
         {
             dragging = true;
@@ -215,7 +225,10 @@ if (!shot2) {
     yVel2 += g;
     newArrow2.x = x2;
     newArrow2.y = y2;
-    
+    fireEmitter.x = x2;
+     fireEmitter.y = y2;
+       fireEmitter.start(true, 200, null, 1);
+  
     
     arrowAngle2 = Math.atan2(x2-oldx2, -(y2-oldy2)) * (180 / Math.PI);
     newArrow2.angle = arrowAngle2;
@@ -223,10 +236,10 @@ if (!shot2) {
      oldy2 = y2;
     
     
-    if(newArrow2.y>window.innerHeight || newArrow2.x>window.innerWidth
-     || newArrow2.y<0 || newArrow2.x<0) {
-    resetArrow2();
-          game.add.tween(newArrow2).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
+    if(newArrow2.y>window.innerHeight+50 || newArrow2.x>window.innerWidth+50
+     || newArrow2.y<0-100 || newArrow2.x<0-50) {
+      resetArrow2();
+           game.add.tween(newArrow2).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
     }
 
 
@@ -306,7 +319,7 @@ function shootArrow() {
     newArrow2.scale.setTo(0.5);
     newArrow2.angle = bow2.angle;
     xVel2 = - (game.input.mousePointer.x-bow2.x)/5;
-    yVel2 = - (game.input.mousePointer.y-bow2.y)/5;
+    yVel2 = - ((game.input.mousePointer.y+60)-bow2.y)/6;
     Client.sendClick(game.input.mousePointer.x, game.input.mousePointer.y, angle2);
 
 
@@ -335,7 +348,7 @@ function checkOverlap(spriteA, spriteB) {
     var boundsB = spriteB.getBounds();
     boundsB.y -= 40;
     boundsB.width-=50;
-    boundsB.height+=20;
+    boundsB.height+=15;
     if(spriteB.x<350){
       boundsB.x+=45;
     }
@@ -376,7 +389,7 @@ movePlayer = function(xi, yi, angle){
     newArrow.scale.setTo(0.5);
     newArrow.angle = bow.angle;
     xVel = - (xi-bow.x)/5;
-    yVel = - (yi-bow.y)/5;
+    yVel = - ((yi+60)-bow.y)/6;
 
     releaseArrow.play();
 
