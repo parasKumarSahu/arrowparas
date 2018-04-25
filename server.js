@@ -34,7 +34,8 @@ io.on('connection',function(socket){
             x: 0,
             y: 0,
             angle: 0,
-            mountainY: 200
+            mountainY: 200,
+            otherHealth: 100
         };
         socket.emit('newplayer', getAllPlayers());
         socket.broadcast.emit('allplayer',socket.player);
@@ -44,6 +45,7 @@ io.on('connection',function(socket){
             socket.player.x = data.x;
             socket.player.y = data.y;
             socket.player.angle = data.angle;
+            socket.player.otherHealth = data.otherHealth;
             socket.broadcast.emit('move',socket.player);
         });
             var inc = true;

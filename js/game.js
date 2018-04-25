@@ -317,7 +317,7 @@ function shootArrow() {
 
     releaseArrow.play();
 
-    Client.sendClick(game.input.mousePointer.x, game.input.mousePointer.y, angle);
+    Client.sendClick(game.input.mousePointer.x, game.input.mousePointer.y, angle, Health2);
 
       if(bow.y==340 && name2!=""){
       bow.y = 190;
@@ -366,8 +366,10 @@ addNewPlayer = function(name){
     name2=name;
 };
 
-movePlayer = function(xi, yi, angle){
+movePlayer = function(xi, yi, angle, otherHealth){
 //   xText.text = 'mouse x: ' + x+' mouse y: ' + y;
+  Health = otherHealth;
+  scoreText2.text = name2+" *Health = "+Health;
 
   bow2.angle=angle;
     shot2 = true;
@@ -420,4 +422,6 @@ function removePlayer(namei){
 	arrow2.y = 350;
 	cloud2.y = 450;             
 	bag2.y = 350;
+	Health = 100;
+	scoreText2.text = name+" Health = 100";
 }

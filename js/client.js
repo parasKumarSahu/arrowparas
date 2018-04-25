@@ -15,8 +15,8 @@ Client.socket.on('allplayer',function(data){
             console.log("first "+data.name);            
 });
 
-Client.sendClick = function(x,y,angle){
-  Client.socket.emit('click',{x:x,y:y,angle:angle});
+Client.sendClick = function(x,y,angle,otherHealth){
+  Client.socket.emit('click',{x:x,y:y,angle:angle,otherHealth:otherHealth});
 };
 
 
@@ -29,8 +29,8 @@ Client.socket.on('newplayer',function(data){
        }
      }
 Client.socket.on('move',function(data){
-        console.log("moving "+data.x+" "+data.y+" "+data.angle);
-        movePlayer(data.x,data.y,data.angle);
+        console.log("moving "+data.x+" "+data.y+" "+data.angle+" "+data.otherHealth);
+        movePlayer(data.x,data.y,data.angle,data.otherHealth);
     });
 
 Client.socket.on('mountainY',function(data){
